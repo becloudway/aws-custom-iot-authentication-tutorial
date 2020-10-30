@@ -1,0 +1,6 @@
+dist/
+node_modules/
+samconfig.toml
+coverage/
+.env
+.editorconfig

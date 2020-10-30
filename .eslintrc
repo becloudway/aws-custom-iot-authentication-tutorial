@@ -1,0 +1,20 @@
+{
+    "extends": ["airbnb-base", "plugin:jest/recommended"],
+    "ignorePatterns": [
+        "node_modules/",
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2018
+    },
+    "env": {
+        "es6": true,
+        "jest/globals": true
+    },
+    "rules": {
+        "max-len": [
+            "error",
+            160
+        ],
+        "no-console": "off"
+    }
+}

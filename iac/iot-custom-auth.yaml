@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: IoT custom authentication tutorial
+
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: iot-custom-auth-user-pool
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+        UserPoolId: !Ref UserPool
+        ClientName: iot-custom-auth-user-pool-client
+        AllowedOAuthFlows:
+          - code
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - email
+          - openid
+          - profile
+        ExplicitAuthFlows:
+          - ALLOW_ADMIN_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_SRP_AUTH
+        SupportedIdentityProviders:
+          - COGNITO
+        CallbackURLs:
+            - http://localhost:3000/callback
+        LogoutURLs:
+            - http://localhost:3000/logout
+
+  IoTAuthoriserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: iot-authoriser-lambda
+      Handler: src/index.handle
+      Runtime: nodejs12.x
+      CodeUri: ../functions/iot-authoriser-lambda
+      Description: ''
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          USER_POOL_ID: !Ref UserPool
+
+  IotAuthoriserPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Ref IoTAuthoriserFunction
+        Principal: iot.amazonaws.com
+
+  IotCustomAuthentication:
+    Type: AWS::IoT::Authorizer
+    Properties:
+        AuthorizerName: CognitoAuthorizer
+        AuthorizerFunctionArn: !GetAtt IoTAuthoriserFunction.Arn
+        Status: ACTIVE
+        SigningDisabled: true
+        TokenKeyName: CognitoToken

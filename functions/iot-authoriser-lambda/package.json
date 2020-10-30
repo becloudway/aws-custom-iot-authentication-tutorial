@@ -1,0 +1,23 @@
+{
+  "name": "@becloudway/iot-custom-auth-tutorial-authoriser-lambda",
+  "version": "1.0.0",
+  "description": "Lambda that delivers authorization functionality for AWS IoT Core.",
+  "main": "src/index.js",
+  "author": "Stijn De Pestel <stijn.depestel@cloudway.be>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.606.0",
+    "jest": "^25.1.0",
+    "jest-sinon": "^1.0.2",
+    "nock": "^13.0.4",
+    "sinon": "^9.0.1"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.4"
+  }
+}

@@ -20,6 +20,8 @@ exports.handle = async (event) => {
     console.log(event);
 
     if (!keyStore) {
+      // Storing the keystore reduces latency for non-cold starts, however, there should be a
+      // 'cache' invalidation system in case the token provider uses key rotation.
       keyStore = getKeyStore((await axios.get(cognitoJwksUri)).data.keys);
     }
 

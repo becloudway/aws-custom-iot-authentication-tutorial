@@ -1,7 +1,7 @@
 {
     "extends": ["airbnb-base", "plugin:jest/recommended"],
     "ignorePatterns": [
-        "node_modules/",
+        "node_modules/"
     ],
     "parserOptions": {
         "ecmaVersion": 2018
@@ -16,5 +16,10 @@
             160
         ],
         "no-console": "off"
+    },
+    "settings": {
+        "jest":{
+            "version": 26
+        }
     }
 }

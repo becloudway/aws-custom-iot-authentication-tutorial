@@ -36,7 +36,7 @@ Resources:
     Properties:
       FunctionName: iot-authoriser-lambda
       Handler: src/index.handle
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       CodeUri: ../functions/iot-authoriser-lambda
       Description: ''
       MemorySize: 128

@@ -9,15 +9,15 @@
     "test": "jest --coverage"
   },
   "devDependencies": {
-    "aws-sdk": "^2.606.0",
-    "jest": "^25.1.0",
-    "jest-sinon": "^1.0.2",
-    "nock": "^13.0.4",
-    "sinon": "^9.0.1"
+    "aws-sdk": "^2.911.0",
+    "jest": "^26.6.3",
+    "jest-sinon": "^1.0.4",
+    "nock": "^13.0.11",
+    "sinon": "^10.0.0"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "jsonwebtoken": "^8.5.1",
-    "jwk-to-pem": "^2.0.4"
+    "jwk-to-pem": "^2.0.5"
   }
 }

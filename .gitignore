@@ -4,3 +4,4 @@ samconfig.toml
 coverage/
 .env
 .editorconfig
+.aws-sam

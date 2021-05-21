@@ -2,15 +2,13 @@
 
 ## Introduction
 
-This is a small working example and tutorial of the AWS IoT Core Custom authentication service. There is a blogpost accompanying this repository with more background around the use case in which this solution can be viable and also some in-depth look into some technical choices. You can find it [here](https://cloudway.be).
-
-<!-- TODO update URI to correct blog post -->
+This is a small working example and tutorial of the AWS IoT Core Custom authentication service. There is a blogpost accompanying this repository (or there will be soon) with more background around the use case in which this solution can be viable and also some in-depth look into some technical choices. You can find it [here](https://www.cloudway.be/blog).
 
 ## Custom Authentication setup
 
-### AWS Cognito
+### Amazon Cognito
 
-We will be using an AWS Cognito user pool to manage the user credentials and provide the tokens for the user. This would allow us to use the tokens for authentication requests for a HTTP/REST API as well as for authentication with AWS IoT Core. It also serves as a demo for any other service that provides JWT tokens. With minor changes this demo could be adapted to use any other OAuth token provider.
+We will be using an Amazon Cognito user pool to manage the user credentials and provide the tokens for the user. This would allow us to use the tokens for authentication requests for an HTTP/REST API as well as for authentication with AWS IoT Core. It also serves as a demo for any other service that provides JWT tokens. With minor changes, this demo could be adapted to use any other OAuth token provider.
 
 ### Authorization lambda
 
@@ -43,7 +41,7 @@ sam deploy -t iac/iot-custom-auth.yaml
 
 ## It's deployed, does it work?
 
-Well, easy to find out. First we'll need to add a use to the created user pool. You can use the AWS Console to do this. However, the user will be created and be required to change their password. Since there is no UI deployed to interact with the user pool, changing the password is easiest using the CLI:
+Well, easy to find out. First, we'll need to add a user to the created user pool. You can use the AWS Console to do this. However, the user will be created and be required to change their password. Since there is no UI deployed to interact with the user pool, changing the password is easiest using the CLI:
 ```bash
 aws cognito-idp admin-set-user-password --user-pool-id <USERPOOLID> --username <TESTUSERNAME> --password <TESTPASSWORD> --permanent
 ```
@@ -58,7 +56,7 @@ AWS_REGION=
 IOT_ENDPOINT=
 ```
 
-The script will use the `adminInitiateAuth` functionality of the AWS SDK for JavaScript in Node.js in order to use the test user's credentials to retrieve the nessary tokens from the user pool. The returned `IdToken` will be used for authenticating the IoT connection. If the IoT connection is established, the script will subscribe to the event topic based on their username and send a hello message. You can use the AWS Console to see the incoming MQTT message and to send messages back to the client.
+The script will use the `adminInitiateAuth` functionality of the AWS SDK for JavaScript in Node.js to use the test user's credentials to retrieve the necessary tokens from the user pool. The returned `IdToken` will be used for authenticating the IoT connection. If the IoT connection is established, the script will subscribe to the event topic based on their username and send a hello message. You can use the AWS Console to see the incoming MQTT message and to send messages back to the client.
 
 You can also execute these actions on the command line to test the different authentication mechanisms provided by the IoT Custom Authentication service:
 
@@ -70,10 +68,10 @@ aws iot test-invoke-authorizer --authorizer-name CognitoAuthorizer --http-contex
 aws iot test-invoke-authorizer --authorizer-name CognitoAuthorizer --http-context 'queryString=?x-amz-customauthorizer-name=CognitoAuthorizer&CognitoToken=<token>'
 ```
 
-Other supported variants can be constructed in a similar way. More information can be found [here](https://docs.aws.amazon.com/iot/latest/developerguide/custom-auth.html).
+Other supported variants can be constructed similarly. More information can be found [here](https://docs.aws.amazon.com/iot/latest/developerguide/custom-auth.html).
 
-The script, as well as the commands above, is based on the default AWS authentication mechanism in the AWS SDK for JavaScript in Node.js and the AWS CLI (v1) respectively. Please ensure you have the correct permissions to execute these actions.
+The script as well as the commands above are based on the default AWS authentication mechanisms in the AWS SDK for JavaScript in Node.js and the AWS CLI (v1) respectively. Please ensure you have the correct permissions to execute these actions.
 
 ## Future work
 
-Since we are validating and verifying the token ourselves in the lambda function, it is executed (almost) every time a user tries to connect to the IoT endpoint using the custom authentication provider. This means malicious users might be able to spam the endpoint and increase the cost for the AWS stack. Hence, the custom authentication service allows some signature to be verified against a public key that is provided during the setup. Therein lies the problem: the keys have to be configured as a static value. This ensures we cannot use any key rotation in the token provider, or that we have to setup another flow that is triggered by, or polls the changes of the public keys and updates the Custom Authentication configuration accordingly.
+Since we are validating and verifying the token ourselves in the lambda function, it is executed (almost) every time a user tries to connect to the IoT endpoint using the custom authentication provider. This means malicious users might be able to spam the endpoint and increase the cost for the AWS stack. Hence, the custom authentication service allows some signature to be verified against a public key that is provided during the setup. Therein lies the problem: the keys have to be configured as a static value. This ensures we cannot use any key rotation in the token provider, or that we have to set up another flow that is triggered by, or polls the changes of the public keys and updates the Custom Authentication configuration accordingly.
